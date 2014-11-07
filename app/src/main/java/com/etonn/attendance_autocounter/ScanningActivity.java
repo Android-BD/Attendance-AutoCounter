@@ -1,12 +1,19 @@
 package com.etonn.attendance_autocounter;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.etonn.attendance_autocounter.bluetooth.BluetoothHelper;
@@ -19,6 +26,7 @@ public class ScanningActivity extends ActionBarActivity {
 
     DBManager db;
     BluetoothHelper bluetooth = null;
+    ArrayList studentsList = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +79,14 @@ public class ScanningActivity extends ActionBarActivity {
 
         // scan Bluetooth device
         Toast.makeText(getApplicationContext(), "Scanning Students...", Toast.LENGTH_SHORT).show();
-        ArrayList btlist = bluetooth.getBluetoothList();
+        bluetooth.startDiscovery();
+
+        // register receiver for scanning
+        IntentFilter mFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver, mFilter);
+        // register receiver for finish scanning
+        mFilter = new IntentFilter(bluetooth.mBluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(mReceiver, mFilter);
     }
 
 
@@ -96,5 +111,39 @@ public class ScanningActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // unregisterReceiver
+        unregisterReceiver(mReceiver);
+    }
+
+    /**
+     * BroadcastReceiver to receive bluetooth devices
+     */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (action.equals(BluetoothDevice.ACTION_FOUND)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                // scan device which has not bonded
+                studentsList = new ArrayList();
+                studentsList.add(device.getName());
+                Log.i("Log",device.getName());
+                Log.i("Log",device.getAddress());
+                // update listview
+                ListView lv = (ListView)findViewById(R.id.listViewStudents);
+                // bind listview with ArrayAdapter
+                lv.setAdapter(new ArrayAdapter<String>(ScanningActivity.this,
+                        android.R.layout.simple_list_item_multiple_choice,
+                        studentsList));
+                lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            }
+
+        }
+    };
 
 }

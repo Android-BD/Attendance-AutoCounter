@@ -58,11 +58,14 @@ public class BluetoothHelper {
         return mBluetoothAdapter.isDiscovering();
     }
 
-    public ArrayList getBluetoothList() {
-        // todo
+    public void startDiscovery() {
         if (!isDiscovering()) {
             mBluetoothAdapter.startDiscovery();
         }
+    }
+
+    public ArrayList getBluetoothList() {
+        // todo
         return null;
     }
 
