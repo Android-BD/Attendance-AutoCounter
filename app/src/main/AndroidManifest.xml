@@ -20,6 +20,10 @@
             android:name="com.etonn.attendance_autocounter.ClassActivity"
             android:label="@string/title_activity_class" >
         </activity>
+        <activity
+            android:name="com.etonn.attendance_autocounter.ScanningActivity"
+            android:label="@string/title_activity_scanning" >
+        </activity>
     </application>
 
 </manifest>
