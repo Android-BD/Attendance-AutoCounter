@@ -28,6 +28,7 @@ public class ClassActivity extends ActionBarActivity {
 
         // init database
         db = new DBManager(ClassActivity.this);
+        this.showClassList();
     }
 
 
@@ -53,6 +54,22 @@ public class ClassActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * show Classes list
+     */
+    private void showClassList() {
+        // get new data from db
+        ArrayList al = db.getClassList();
+        // update list
+        lv = (ListView)findViewById(R.id.listViewClasses);
+        // bind listview with ArrayAdapter
+        lv.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, al));
+    }
+
+    /**
+     * add class into db
+     * @param view
+     */
     public void addClass(View view) {
         // get Class name
         EditText editTextClassName = (EditText) findViewById(R.id.editTextClassName);
@@ -68,13 +85,8 @@ public class ClassActivity extends ActionBarActivity {
             contentValues.put("headcount", Integer.parseInt(headcount));
             db.putClass(contentValues);
 
-            // get new data from db
-            ArrayList al = db.getClassList();
-
-            // update list
-            lv = (ListView)findViewById(R.id.listViewClasses);
-            // bind listview with ArrayAdapter
-            lv.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, al));
+            // show Classes list
+            this.showClassList();
 
             // empty EditText
             editTextClassName.setText("");
