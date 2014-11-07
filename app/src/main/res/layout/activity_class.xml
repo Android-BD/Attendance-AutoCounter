@@ -17,7 +17,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextClassName"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:hint="Class Name" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/editTextHeadcount"
+            android:layout_weight="1"
+            android:hint="Headcount" />
 
         <Button
             android:layout_width="wrap_content"

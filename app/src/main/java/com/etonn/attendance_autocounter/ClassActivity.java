@@ -22,8 +22,7 @@ import java.util.ArrayList;
 public class ClassActivity extends ActionBarActivity {
 
     ListView lv; // for Class name listview
-    DBManager dbManager;
-    SQLiteDatabase db;
+    DBManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +30,7 @@ public class ClassActivity extends ActionBarActivity {
         setContentView(R.layout.activity_class);
 
         // init database
-        dbManager = new DBManager(ClassActivity.this);
-        db = dbManager.getReadableDatabase();
-
+        db = new DBManager(ClassActivity.this);
     }
 
 
@@ -61,25 +58,21 @@ public class ClassActivity extends ActionBarActivity {
 
     public void addClass(View view) {
         // get Class name
-        EditText editText = (EditText) findViewById(R.id.editTextClassName);
-        String className = editText.getText().toString();
-        if (className.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Please fill in a Class name.", Toast.LENGTH_SHORT).show();
+        EditText editTextClassName = (EditText) findViewById(R.id.editTextClassName);
+        String className = editTextClassName.getText().toString();
+        EditText editTextHeadcount = (EditText) findViewById(R.id.editTextHeadcount);
+        String headcount = editTextHeadcount.getText().toString();
+        if (className.isEmpty() || headcount.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Please fill in Class name and Headcount.", Toast.LENGTH_SHORT).show();
         } else {
             // save to DB
-            ContentValues values = new ContentValues();
-            values.put("class_name", className);
-            values.put("headcount", 20);
-            Log.i("Log", "insert data");
-            db.insert("classes", null, values);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("class_name", className);
+            contentValues.put("headcount", Integer.parseInt(headcount));
+            db.putClass(contentValues);
 
             // get new data from db
-            Cursor cursor = db.rawQuery("select * from classes order by classes_id DESC", null);
-            ArrayList al = new ArrayList();
-            while (cursor.moveToNext()) {
-                //id = cursor.getString(cursor.getColumnIndex("id"));
-                al.add(cursor.getString(cursor.getColumnIndex("class_name")));
-            }
+            ArrayList al = db.getClassList();
 
             // update list
             lv = (ListView)findViewById(R.id.listViewClasses);
@@ -87,7 +80,8 @@ public class ClassActivity extends ActionBarActivity {
             lv.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, al));
 
             // empty EditText
-            editText.setText("");
+            editTextClassName.setText("");
+            editTextHeadcount.setText("");
         }
 
     }
