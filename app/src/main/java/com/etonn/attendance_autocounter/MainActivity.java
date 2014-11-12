@@ -66,11 +66,19 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * start ClassActivity
+     * @param view
+     */
     public void startClassActivity(View view) {
         Intent intent = new Intent(this, ClassActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * start ScanningActivity
+     * @param view
+     */
     public void startScanningActivity(View view) {
         // todo attach the class id from spinner
         Intent intent = new Intent(this, ScanningActivity.class);

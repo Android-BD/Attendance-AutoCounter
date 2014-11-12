@@ -22,7 +22,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Scanning Activity"
+            android:text="Scanning Students"
             android:id="@+id/buttonScanningActivity"
             android:onClick="startScanningActivity"
             android:layout_above="@+id/linearLayout"
@@ -32,7 +32,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Class Activity"
+            android:text="Class Setting"
             android:id="@+id/buttonClassActivity"
             android:onClick="startClassActivity"
             android:layout_marginBottom="65dp"

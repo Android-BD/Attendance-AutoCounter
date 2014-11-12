@@ -26,7 +26,7 @@ public class ScanningActivity extends ActionBarActivity {
 
     DBManager db;
     BluetoothHelper bluetooth = null;
-    ArrayList studentsList = new ArrayList();
+    public static ArrayList studentsList = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +130,6 @@ public class ScanningActivity extends ActionBarActivity {
             if (action.equals(BluetoothDevice.ACTION_FOUND)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // scan device which has not bonded
-                studentsList = new ArrayList();
                 studentsList.add(device.getName());
                 Log.i("Log",device.getName());
                 Log.i("Log",device.getAddress());
