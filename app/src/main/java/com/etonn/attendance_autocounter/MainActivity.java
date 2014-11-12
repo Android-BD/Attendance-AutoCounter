@@ -6,14 +6,40 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import com.etonn.attendance_autocounter.db.DBManager;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    DBManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // init database
+        db = new DBManager(this);
+        ArrayList arrayListClasses = db.getClassList();
+        // add data into spinner
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerClasses);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item,
+                arrayListClasses
+        );
+        // set up style of dropdown list
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // add adapter into spinner
+        spinner.setAdapter(adapter);
+        // add Listener
+        //spinner.setOnItemSelectedListener();
+        // set up default value
+        spinner.setVisibility(View.VISIBLE);
 
     }
 
@@ -40,13 +66,13 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // todo for test
     public void startClassActivity(View view) {
         Intent intent = new Intent(this, ClassActivity.class);
         startActivity(intent);
     }
 
     public void startScanningActivity(View view) {
+        // todo attach the class id from spinner
         Intent intent = new Intent(this, ScanningActivity.class);
         startActivity(intent);
     }
