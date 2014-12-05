@@ -12,21 +12,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.etonn.attendance_autocounter.bluetooth.BluetoothHelper;
 import com.etonn.attendance_autocounter.db.DBManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class ScanningActivity extends ActionBarActivity {
 
     DBManager db;
-    BluetoothHelper bluetooth = null;
-    public static ArrayList studentsList = new ArrayList();
+    public static BluetoothHelper bluetooth = null;
+    public static List<HashMap<String,Object>> studentsList = new ArrayList<HashMap<String,Object>>();
+    public static Map selectedStudents = new HashMap();
+    SimpleAdapter mSimpleAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +44,6 @@ public class ScanningActivity extends ActionBarActivity {
 
         // init database
         db = new DBManager(ScanningActivity.this);
-
         // detect Bluetooth
         bluetooth = new BluetoothHelper();
         if (!bluetooth.detectBluetooth()) {
@@ -52,7 +60,6 @@ public class ScanningActivity extends ActionBarActivity {
                     })
                     .show();
         }
-
         // open Bluetooth
         if (!bluetooth.isBluetoothOpening()) {
             new AlertDialog.Builder(this)
@@ -76,17 +83,36 @@ public class ScanningActivity extends ActionBarActivity {
                     })
                     .show();
         }
-
-        // scan Bluetooth device
-        Toast.makeText(getApplicationContext(), "Scanning Students...", Toast.LENGTH_SHORT).show();
-        bluetooth.startDiscovery();
-
+        // Scan Student
+        scanStudent();
         // register receiver for scanning
         IntentFilter mFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(mReceiver, mFilter);
         // register receiver for finish scanning
         mFilter = new IntentFilter(bluetooth.mBluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(mReceiver, mFilter);
+        // Scan Student Listener
+        Button scanStudentButton = (Button) findViewById(R.id.buttonScan);
+        scanStudentButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                scanStudent();
+            }
+        });
+        // Save Student Listener
+        Button saveStudentsButton = (Button) findViewById(R.id.buttonSaveStudents);
+        saveStudentsButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                if (!selectedStudents.isEmpty()) {
+                    if (db.putStudents(selectedStudents)) {
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
 
@@ -120,6 +146,15 @@ public class ScanningActivity extends ActionBarActivity {
     }
 
     /**
+     * Scan Student
+     */
+    public void scanStudent() {
+        // scan Bluetooth device
+        Toast.makeText(getApplicationContext(), "Scanning Students...", Toast.LENGTH_SHORT).show();
+        bluetooth.startDiscovery();
+    }
+
+    /**
      * BroadcastReceiver to receive bluetooth devices
      */
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -129,17 +164,44 @@ public class ScanningActivity extends ActionBarActivity {
             String action = intent.getAction();
             if (action.equals(BluetoothDevice.ACTION_FOUND)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // scan device which has not bonded
-                studentsList.add(device.getName());
+                // scan device which has not bonded, build studentsList for SimpleAdapter
                 Log.i("Log",device.getName());
                 Log.i("Log",device.getAddress());
+                HashMap<String,Object> map = new HashMap<String,Object>();
+                map.put("name", device.getName());
+                map.put("address", device.getAddress());
+                studentsList.add(map);
                 // update listview
                 ListView lv = (ListView)findViewById(R.id.listViewStudents);
                 // bind listview with ArrayAdapter
-                lv.setAdapter(new ArrayAdapter<String>(ScanningActivity.this,
-                        android.R.layout.simple_list_item_multiple_choice,
-                        studentsList));
+                mSimpleAdapter = new SimpleAdapter(ScanningActivity.this,
+                        studentsList,
+                        R.layout.adapter_student_list,
+                        new String[]{"name", "address"},
+                        new int[]{R.id.checkedTextViewStudentName, R.id.textViewAddress}
+                );
+                lv.setAdapter(mSimpleAdapter);
+                //lv.setAdapter(new ArrayAdapter<String>(ScanningActivity.this,
+                //        android.R.layout.simple_list_item_multiple_choice,
+                //        studentsList));
                 lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+                // add Adapter listener
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Map<String, String> map = (Map<String, String>) ScanningActivity.this.mSimpleAdapter
+                                .getItem(i);
+                        String mac_address = map.get("address");
+                        Log.i("Log", i + map.get("name")+"|"+ mac_address);
+                        // save or remove mac address
+                        if (selectedStudents.containsKey(i)) {
+                            selectedStudents.remove(i);
+                        } else {
+                            selectedStudents.put(i, mac_address);
+                        }
+                    }
+                });
             }
 
         }

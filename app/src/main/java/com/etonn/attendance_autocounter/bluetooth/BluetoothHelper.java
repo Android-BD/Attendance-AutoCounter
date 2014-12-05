@@ -64,9 +64,4 @@ public class BluetoothHelper {
         }
     }
 
-    public ArrayList getBluetoothList() {
-        // todo
-        return null;
-    }
-
 }

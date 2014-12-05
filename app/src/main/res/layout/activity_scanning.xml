@@ -24,23 +24,26 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="false"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignWithParentIfMissing="false">
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan again"
+            android:id="@+id/buttonScan"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
             android:id="@+id/buttonSaveStudents"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="center_vertical" />
+            android:layout_weight="1" />
     </LinearLayout>
 
 </RelativeLayout>
