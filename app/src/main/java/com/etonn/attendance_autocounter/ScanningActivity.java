@@ -15,13 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.etonn.attendance_autocounter.bluetooth.BluetoothHelper;
 import com.etonn.attendance_autocounter.db.DBManager;
+import com.etonn.attendance_autocounter.db.Student;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class ScanningActivity extends ActionBarActivity {
     DBManager db;
     public static BluetoothHelper bluetooth = null;
     public static List<HashMap<String, Object>> studentsList = new ArrayList<HashMap<String, Object>>();
-    public static Map selectedStudents = new HashMap();
+    public static Map<Integer, Student> selectedStudents = new HashMap<Integer, Student>();
     SimpleAdapter mSimpleAdapter = null;
 
     @Override
@@ -193,13 +193,15 @@ public class ScanningActivity extends ActionBarActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Map<String, String> map = (Map<String, String>) ScanningActivity.this.mSimpleAdapter
                                 .getItem(i);
-                        String mac_address = map.get("address");
-                        Log.i("Log", i + map.get("name") + "|" + mac_address);
+                        Student student = new Student();
+                        student.setName(map.get("name"));
+                        student.setMac(map.get("address"));
+                        Log.i("Log", i + student.getName() );
                         // save or remove mac address
                         if (selectedStudents.containsKey(i)) {
                             selectedStudents.remove(i);
                         } else {
-                            selectedStudents.put(i, mac_address);
+                            selectedStudents.put(i, student);
                         }
                     }
                 });

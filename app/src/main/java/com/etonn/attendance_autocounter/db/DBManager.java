@@ -25,7 +25,7 @@ public class DBManager extends DBHelper {
     }
 
     public ArrayList getClassList() {
-        String sql = "select * from classes order by classes_id DESC";
+        String sql = "select * from classes order by class_id DESC";
         Log.i("Log:DBManager", sql);
         Cursor cursor = db.rawQuery(sql, null);
         ArrayList al = new ArrayList();
@@ -53,14 +53,15 @@ public class DBManager extends DBHelper {
      *
      * @param students
      */
-    public boolean putStudents(Map students) {
+    public boolean putStudents(Map<Integer, Student> students) {
         Iterator iter = students.keySet().iterator();
         while (iter.hasNext()) {
             Object key = iter.next();
-            Object value = students.get(key);
+            Student value = students.get(key);
             Log.i("Log:DBManager", "insert data");
             ContentValues mContentValues = new ContentValues();
-            mContentValues.put("mac", value.toString());
+            mContentValues.put("mac", value.getMac());
+            mContentValues.put("name", value.getName());
             try {
                 db.insert("students", null, mContentValues);
             } catch (android.database.SQLException e) {
