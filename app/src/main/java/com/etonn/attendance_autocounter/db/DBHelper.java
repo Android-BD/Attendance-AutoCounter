@@ -32,7 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "[date] DATE)";
 
         String sql2 = "CREATE TABLE IF NOT EXISTS [classes] (" +
-                "[classes_id] INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "[class_id] INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "[class_name] VARCHAR(64)," +
                 "[headcount] INT(4))";
 
@@ -49,7 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //如果DATABASE_VERSION值被改为2,系统发现现有数据库版本不同,即会调用onUpgrade
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.i("Log:DBHelper","update a Database");
+        Log.i("Log:DBHelper", "update a Database");
         db.execSQL("ALTER TABLE students ADD COLUMN other STRING");
     }
 }

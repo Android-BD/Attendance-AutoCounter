@@ -23,26 +23,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // init database
-        db = new DBManager(this);
-        ArrayList arrayListClasses = db.getClassList();
-        // add data into spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerClasses);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,
-                arrayListClasses
-        );
-        // set up style of dropdown list
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // add adapter into spinner
-        spinner.setAdapter(adapter);
-        // add Listener
-        //spinner.setOnItemSelectedListener();
-        // set up default value
-        spinner.setVisibility(View.VISIBLE);
-
+        loadClass();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        loadClass();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,6 +57,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * start ClassActivity
+     *
      * @param view
      */
     public void startClassActivity(View view) {
@@ -77,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
      * start ScanningActivity
+     *
      * @param view
      */
     public void startScanningActivity(View view) {
@@ -85,4 +76,33 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    public void startEmailAbsenteeActivity(View view) {
+        Intent intent = new Intent(this, EmailAbsenteeActivity.class);
+        startActivity(intent);
+    }
+
+    public void startRoportActivity(View view) {
+        Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
+    }
+
+    public void loadClass() {
+        // init database
+        db = new DBManager(this);
+        ArrayList arrayListClasses = db.getClassList();
+        // add data into spinner
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerClasses);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item,
+                arrayListClasses
+        );
+        // set up style of dropdown list
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // add adapter into spinner
+        spinner.setAdapter(adapter);
+        // add Listener
+        //spinner.setOnItemSelectedListener();
+        // set up default value
+        spinner.setVisibility(View.VISIBLE);
+    }
 }

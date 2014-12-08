@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class ClassActivity extends ActionBarActivity {
 
-    ListView lv; // for Class name listview
+    ListView listViewClass; // for Class name listview
     DBManager db;
 
     @Override
@@ -29,6 +30,15 @@ public class ClassActivity extends ActionBarActivity {
         // init database
         db = new DBManager(ClassActivity.this);
         this.showClassList();
+
+        // add listener
+        listViewClass.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CourseModifyDialog mDialog = new CourseModifyDialog();
+                mDialog.show(getFragmentManager(), "dialogCourse");
+            }
+        });
     }
 
 
@@ -61,13 +71,14 @@ public class ClassActivity extends ActionBarActivity {
         // get new data from db
         ArrayList al = db.getClassList();
         // update list
-        lv = (ListView)findViewById(R.id.listViewClasses);
+        listViewClass = (ListView) findViewById(R.id.listViewClasses);
         // bind listview with ArrayAdapter
-        lv.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, al));
+        listViewClass.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al));
     }
 
     /**
      * add class into db
+     *
      * @param view
      */
     public void addClass(View view) {

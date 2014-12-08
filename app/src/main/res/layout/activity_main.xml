@@ -35,10 +35,25 @@
             android:text="Class Setting"
             android:id="@+id/buttonClassActivity"
             android:onClick="startClassActivity"
-            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/buttonScanningActivity"
-            android:layout_toStartOf="@+id/buttonScanningActivity"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email Absentee"
+            android:id="@+id/buttonEmail"
+            android:onClick="startEmailAbsenteeActivity"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Attendance Report"
+            android:id="@+id/buttonReport"
+            android:onClick="startRoportActivity"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>

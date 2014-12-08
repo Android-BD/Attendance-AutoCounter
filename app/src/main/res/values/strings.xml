@@ -6,5 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_class">Class Management</string>
     <string name="title_activity_scanning">Bluetooth Scanning</string>
+    <string name="title_activity_email_absentee">EmailAbsenteeActivity</string>
+    <string name="title_activity_report">ReportActivity</string>
 
 </resources>

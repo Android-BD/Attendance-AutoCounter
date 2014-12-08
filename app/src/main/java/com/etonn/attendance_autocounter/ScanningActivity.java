@@ -33,7 +33,7 @@ public class ScanningActivity extends ActionBarActivity {
 
     DBManager db;
     public static BluetoothHelper bluetooth = null;
-    public static List<HashMap<String,Object>> studentsList = new ArrayList<HashMap<String,Object>>();
+    public static List<HashMap<String, Object>> studentsList = new ArrayList<HashMap<String, Object>>();
     public static Map selectedStudents = new HashMap();
     SimpleAdapter mSimpleAdapter = null;
 
@@ -93,7 +93,7 @@ public class ScanningActivity extends ActionBarActivity {
         registerReceiver(mReceiver, mFilter);
         // Scan Student Listener
         Button scanStudentButton = (Button) findViewById(R.id.buttonScan);
-        scanStudentButton.setOnClickListener(new View.OnClickListener(){
+        scanStudentButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -102,10 +102,11 @@ public class ScanningActivity extends ActionBarActivity {
         });
         // Save Student Listener
         Button saveStudentsButton = (Button) findViewById(R.id.buttonSaveStudents);
-        saveStudentsButton.setOnClickListener(new View.OnClickListener(){
+        saveStudentsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                Log.i("Log", "Save Students to DB");
                 if (!selectedStudents.isEmpty()) {
                     if (db.putStudents(selectedStudents)) {
                         Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
@@ -165,14 +166,14 @@ public class ScanningActivity extends ActionBarActivity {
             if (action.equals(BluetoothDevice.ACTION_FOUND)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // scan device which has not bonded, build studentsList for SimpleAdapter
-                Log.i("Log",device.getName());
-                Log.i("Log",device.getAddress());
-                HashMap<String,Object> map = new HashMap<String,Object>();
+                Log.i("Log", device.getName());
+                Log.i("Log", device.getAddress());
+                HashMap<String, Object> map = new HashMap<String, Object>();
                 map.put("name", device.getName());
                 map.put("address", device.getAddress());
                 studentsList.add(map);
                 // update listview
-                ListView lv = (ListView)findViewById(R.id.listViewStudents);
+                ListView lv = (ListView) findViewById(R.id.listViewStudents);
                 // bind listview with ArrayAdapter
                 mSimpleAdapter = new SimpleAdapter(ScanningActivity.this,
                         studentsList,
@@ -193,7 +194,7 @@ public class ScanningActivity extends ActionBarActivity {
                         Map<String, String> map = (Map<String, String>) ScanningActivity.this.mSimpleAdapter
                                 .getItem(i);
                         String mac_address = map.get("address");
-                        Log.i("Log", i + map.get("name")+"|"+ mac_address);
+                        Log.i("Log", i + map.get("name") + "|" + mac_address);
                         // save or remove mac address
                         if (selectedStudents.containsKey(i)) {
                             selectedStudents.remove(i);

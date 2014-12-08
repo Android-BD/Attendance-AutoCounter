@@ -18,6 +18,7 @@ public class BluetoothHelper {
 
     /**
      * detect Bluetooth
+     *
      * @return boolean
      */
     public boolean detectBluetooth() {
@@ -32,29 +33,31 @@ public class BluetoothHelper {
 
     /**
      * detect Bluetooth on or off
+     *
      * @return
      */
     public boolean isBluetoothOpening() {
         if (mBluetoothAdapter.isEnabled()) {
-            Log.i("Log","Bluetooth is opening");
+            Log.i("Log", "Bluetooth is opening");
             return true;
         } else {
-            Log.i("Log","Bluetooth is closed");
+            Log.i("Log", "Bluetooth is closed");
             return false;
         }
     }
 
     /**
      * open Bluetooth
+     *
      * @return
      */
     public void openBluetooth() {
-        Log.i("Log","Bluetooth opened");
+        Log.i("Log", "Bluetooth opened");
         mBluetoothAdapter.enable();
     }
 
     public boolean isDiscovering() {
-        Log.i("Log","Bluetooth is Discovering");
+        Log.i("Log", "Bluetooth is Discovering");
         return mBluetoothAdapter.isDiscovering();
     }
 
